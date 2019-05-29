@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="https://lib04.xesimg.com/lib/jQuery/1.11.1/jquery.min.js"> </script>
+  <script src="https://zt.xueersi.com/apStatic/js/qz-rem.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    .section {
+      height: 1300px;
+      border-bottom: 1px solid #f00;
+      box-sizing: border-box;
+      padding-top: 400px;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="section">
+      <p>停留时间0：</p>
+      <p v-for="item in movedata" v-if="parseInt(item.pos / 1300) === 0">{{movedata[0].time}}</p>
+    </div>
+    <div class="section">
+      <p>停留时间1：</p>
+      <p v-for="item in movedata" v-if="parseInt(item.pos / 1300) === 1">{{1}}  ----  {{item.time}}</p>
+    </div>
+    <div class="section">
+      <p>停留时间2：</p>
+      <p v-for="item in movedata" v-if="parseInt(item.pos / 1300) === 2">{{2}}  ----  {{item.time}}</p>
+    </div>
+    <div class="section">
+      <p>停留时间3：</p>
+      <p v-for="item in movedata" v-if="parseInt(item.pos / 1300) === 3">{{3}}  ----  {{item.time}}</p>
+    </div>
+    <div class="section">
+      <p>停留时间4：</p>
+      <p v-for="item in movedata" v-if="parseInt(item.pos / 1300) === 4">{{4}}  ----  {{item.time}}</p>
+    </div>
+    <div class="section">
+      <p>停留时间5：</p>
+      <p v-for="item in movedata" v-if="parseInt(item.pos / 1300) === 5">{{5}}  ----  {{item.time}}</p>
+    </div>
+    <div class="section">
+      <p>停留时间6：</p>
+      <p v-for="item in movedata" v-if="parseInt(item.pos / 1300) === 6">{{6}}  ----  {{item.time}}</p>
+    </div>
+  </div>
+  <script src="https://cdn.bootcss.com/vue/2.5.16/vue.min.js"></script>
+  <!-- <script src="../event.js"></script> -->
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        movedata: [],
+        scrollTop: $(window).scrollTop(),
+        time: Date.now(),
+        stayTime: 0
+      },
+      mounted () {
+        var index = parseInt(this.scrollTop / 1300) + 1
+        for (var i = 0; i <= index; i++) {
+          this.movedata.push({
+            pos: i * 1300,
+            time: 0
+          })
+        }
+        window.onscroll = () => {
+          this.scrollTop = $(window).scrollTop()
+        }
+        setInterval(() => {
+          var currentTime = Date.now()
+          var disTime = currentTime - this.time
+          // 计算当前是展现在屏幕中的模块序号
+          var currentIndex = parseInt(this.scrollTop / 1300)
+          // 计算当前的滚动高度超出满屏的多少
+          var modeDis = this.scrollTop % 1300
+          var length = this.movedata.length
+          if (currentIndex + 1 >= length) {
+            for (var i = length; i <= currentIndex + 1; i++) {
+              this.movedata.push({
+                pos: 1300 * i,
+                time: disTime
+              })
+            }
+          } else {
+            var modeDis = this.scrollTop - this.movedata[currentIndex].pos
+            if ((1300 - modeDis) > 400) {
+              this.movedata[currentIndex].time += disTime
+            }
+            if (modeDis > 400) {
+              this.movedata[currentIndex + 1].time += disTime
+            }
+          }
+          // 判断当前滑动的方向
+          // var dis = this.scrollTop - this.movedata[currentIndex].pos >= 0 ? 1 : -1
+          // var dis = Math.abs(this.scrollTop - this.movedata[length - 2].pos)
+          // // 滑动距离超过
+          // if (dis > 1300 && dis < 1700) {
+          //   let index = parseInt(this.scrollTop / 1300)
+          //   if (this.movedata[index]) {
+          //     this.movedata[index].time += disTime
+          //   } else {
+          //     this.movedata.push({
+          //       pos: 1300 * index,
+          //       time: disTime
+          //     })
+          //   }
+          // } else if (dis > 1700) {
+          //   let index = parseInt(this.scrollTop / 1300) + 1
+          //   for (var i = length; i <= index; i++) {
+          //     if (this.movedata[i]) {
+          //       this.movedata[i].time += disTime
+          //     } else {
+          //       this.movedata.push({
+          //         pos: 1300 * i,
+          //         time: disTime
+          //       })
+          //     }
+          //   }
+          // } else {
+          //   if (this.scrollTop % 1300 > 400) {
+          //     this.movedata[currentIndex + 1].time += disTime
+          //   }
+          //   if (1300 - this.scrollTop % 1300 > 400) {
+          //     this.movedata[currentIndex].time += disTime
+          //   }
+          // }
+          this.time = currentTime
+          console.log(this.movedata)
+        }, 1000)
+      }
+    })
+  </script>
+</body>
+</html>
